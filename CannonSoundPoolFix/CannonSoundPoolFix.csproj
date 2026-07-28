@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>CannonSoundPoolFix</AssemblyName>
+    <RootNamespace>CannonSoundPoolFix</RootNamespace>
+    <Version>1.2.0</Version>
+    <Authors>furryAxw</Authors>
+    <Description>Stops excess cannon AudioSources while preserving SFX and VFX objects, with bounded native effect pooling.</Description>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/furryaxw/CannonSoundPoolFix</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/furryaxw/CannonSoundPoolFix</PackageProjectUrl>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <SprocketRoot Condition="'$(SprocketRoot)' == ''">G:\Sprocket</SprocketRoot>
+    <ModDeployDirectory Condition="'$(ModDeployDirectory)' == ''">$(SprocketRoot)\Mods</ModDeployDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>$(SprocketRoot)\MelonLoader\net6\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>$(SprocketRoot)\MelonLoader\net6\Il2CppInterop.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="MelonLoader">
+      <HintPath>$(SprocketRoot)\MelonLoader\net6\MelonLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\UnityEngine.AudioModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppSprocket.Vehicles">
+      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\Il2CppSprocket.Vehicles.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSprocket.EffectsFramework">
+      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\Il2CppSprocket.EffectsFramework.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppSprocket.Vehicles.Weapons">
+      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\Il2CppSprocket.Vehicles.Weapons.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild"
+          AfterTargets="PostBuildEvent"
+          Condition="'$(SkipModDeploy)' != 'true'">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModDeployDirectory)" />
+  </Target>
+
+</Project>
