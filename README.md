@@ -24,7 +24,7 @@
 1. 为《Sprocket》安装 MelonLoader。
 2. 下载 `CannonSoundPoolFix.dll`。
 3. 将 DLL 放入游戏目录下的 `Mods` 文件夹。
-4. 启动游戏；MelonLoader 控制台应显示 `Cannon Sound Pool Fix v1.2.0`。
+4. 启动游戏；MelonLoader 控制台应显示 `Cannon Sound Pool Fix v1.2.1`。
 
 持续射击触发限制时，每个场景最多记录一次：
 
@@ -53,13 +53,6 @@ dotnet build .\CannonSoundPoolFix\CannonSoundPoolFix.csproj -c Release `
 ```
 
 省略 `SkipModDeploy` 会把构建出的 DLL 复制到 `$(SprocketRoot)\Mods`。游戏运行时请勿覆盖已加载的 DLL。
-
-发布前门禁：
-
-```powershell
-dotnet run --project .\tools\RetentionPolicyCheck\RetentionPolicyCheck.csproj -c Release
-.\tools\RuntimeContractCheck.ps1
-```
 
 ## 许可证
 

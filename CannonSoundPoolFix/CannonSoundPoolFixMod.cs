@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using MelonLoader;
 using UnityEngine;
@@ -9,9 +10,16 @@ using MuzzleFlashEffect = Il2CppSprocket.Vehicles.Fires.MuzzleFlashEffect;
 [assembly: MelonInfo(
     typeof(CannonSoundPoolFix.CannonSoundPoolFixMain),
     "Cannon Sound Pool Fix",
-    "1.2.0",
+    "1.2.1",
     "furryAxw")]
 [assembly: MelonGame("HD", "Sprocket")]
+[assembly: AssemblyMetadata("Sprocket.Mod.Id", "furryaxw.cannon-sound-pool-fix")]
+[assembly: AssemblyMetadata("Sprocket.Mod.DisplayName", "Cannon Sound Pool Fix")]
+[assembly: AssemblyMetadata("Sprocket.Mod.Description", "Prevents rapid-fire cannons from exhausting Sprocket's audio pool while preserving muzzle effects.")]
+[assembly: AssemblyMetadata("Sprocket.Mod.Authors", "furryAxw")]
+[assembly: AssemblyMetadata("Sprocket.Mod.Repository", "furryaxw/CannonSoundPoolFix")]
+[assembly: AssemblyMetadata("Sprocket.Mod.Category", "audio")]
+[assembly: AssemblyMetadata("Sprocket.Mod.License", "GPL-3.0-only")]
 
 namespace CannonSoundPoolFix
 {
@@ -44,7 +52,7 @@ namespace CannonSoundPoolFix
         {
             Instance = this;
             LoggerInstance.Msg(
-                "Enabled. Keeps the latest " +
+                "[CSPF] Enabled. Keeps the latest " +
                 $"{SoundPoolRetentionPolicy.MaxPlayingEffectsPerArea} " +
                 "cannon sounds per 1 x 1 x 1 area and caps each " +
                 "muzzle-effect prototype at " +
@@ -140,7 +148,7 @@ namespace CannonSoundPoolFix
                     {
                         loggedFirstAudioStop = true;
                         LoggerInstance.Msg(
-                            "Cannon voice limit engaged: stopped the " +
+                            "[CSPF] Cannon voice limit engaged: stopped the " +
                             "oldest playing cannon AudioSource pair.");
                     }
                 }
@@ -194,7 +202,7 @@ namespace CannonSoundPoolFix
                     prototype.MaxInstanceCount = configuredLimit;
 
                 LoggerInstance.Msg(
-                    "Configured cannon muzzle-effect prototype " +
+                    "[CSPF] Configured cannon muzzle-effect prototype " +
                     $"id={prototypeId},originalLimit={originalLimit}," +
                     $"effectiveLimit={configuredLimit}.");
                 return;
@@ -277,7 +285,7 @@ namespace CannonSoundPoolFix
                 return;
 
             LoggerInstance.Error(
-                $"category={category},error={failure}");
+                $"[CSPF] category={category},error={failure}");
         }
 
         private static bool IsActive(Transform? transform)

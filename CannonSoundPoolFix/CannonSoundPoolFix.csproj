@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>CannonSoundPoolFix</AssemblyName>
     <RootNamespace>CannonSoundPoolFix</RootNamespace>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Authors>furryAxw</Authors>
     <Description>Stops excess cannon AudioSources while preserving SFX and VFX objects, with bounded native effect pooling.</Description>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
