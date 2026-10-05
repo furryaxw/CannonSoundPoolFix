@@ -1,6 +1,7 @@
 # CannonSoundPoolFix
 
-适用于《Sprocket》的独立 MelonLoader 模组。它会主动结束过量的旧机炮声，避免高射速武器持续占满全局音频 voice pool，同时限制炮口特效根实例无限增长。
+适用于《Sprocket》的独立 BepInEx 6 插件。它会主动结束过量的旧机炮声，避免高射速武器持续占满
+全局音频 voice pool，同时限制炮口特效根实例无限增长。
 
 ## 主要功能
 
@@ -13,32 +14,32 @@
 
 ## 要求
 
-- 《Sprocket》`0.2.53.1`（当前实测版本）
-- MelonLoader `0.7.2 Open-Beta`，IL2CPP / net6
+- 《Sprocket》`0.2.55.5`
+- BepInEx `6.0.0-be.788`，IL2CPP / net6
 - Windows x64
 
-游戏或 MelonLoader 更新后，生成的 IL2CPP 类型与运行时行为可能变化，需重新验证。
+游戏更新后，生成的 IL2CPP 类型与运行时行为可能变化，需重新验证。
 
 ## 安装
 
-1. 为《Sprocket》安装 MelonLoader。
-2. 下载 `CannonSoundPoolFix.dll`。
-3. 将 DLL 放入游戏目录下的 `Mods` 文件夹。
-4. 启动游戏；MelonLoader 控制台应显示 `Cannon Sound Pool Fix v1.2.1`。
+1. 为《Sprocket》安装 BepInEx 6（IL2CPP）。
+2. 将 `CannonSoundPoolFix.dll` 放入 `BepInEx\plugins`。
+3. 启动游戏；日志里应出现 `Cannon Sound Pool Fix v2.0.0` 的加载行。
 
 持续射击触发限制时，每个场景最多记录一次：
 
 ```text
-Cannon voice limit engaged: stopped the oldest playing cannon AudioSource pair.
+[CSPF] Cannon voice limit engaged: stopped the oldest playing cannon AudioSource pair.
 ```
 
-## 与 CannonSmokeSuppressor 配合
+## 与 SmokeSuppressor 配合
 
-本模组只管理炮声音源与炮口 Effect 生命周期。`CannonSmokeSuppressor` 可同时安装，继续负责抑制长期堆积的烟雾输出。
+本模组只管理炮声音源与炮口 Effect 生命周期。[SmokeSuppressor](https://github.com/furryaxw/SmokeSuppressor)
+可以同时安装，继续负责隐藏长期堆积的烟雾输出。
 
 ## 构建
 
-默认假设游戏安装在 `G:\Sprocket`：
+默认假设游戏安装在 `G:\Sprocket0.2.55.5`：
 
 ```powershell
 dotnet build .\CannonSoundPoolFix\CannonSoundPoolFix.csproj -c Release -p:SkipModDeploy=true
@@ -48,11 +49,12 @@ dotnet build .\CannonSoundPoolFix\CannonSoundPoolFix.csproj -c Release -p:SkipMo
 
 ```powershell
 dotnet build .\CannonSoundPoolFix\CannonSoundPoolFix.csproj -c Release `
-  -p:SprocketRoot="D:\Games\Sprocket" `
+  -p:SprocketGameRoot="D:\Games\Sprocket" `
   -p:SkipModDeploy=true
 ```
 
-省略 `SkipModDeploy` 会把构建出的 DLL 复制到 `$(SprocketRoot)\Mods`。游戏运行时请勿覆盖已加载的 DLL。
+省略 `SkipModDeploy` 会把构建出的 DLL 复制到 `$(SprocketGameRoot)\BepInEx\plugins`。
+游戏运行时请勿覆盖已加载的 DLL。
 
 ## 许可证
 
