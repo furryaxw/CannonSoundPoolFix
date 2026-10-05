@@ -20,7 +20,7 @@ using MuzzleFlashEffect = Sprocket.Vehicles.Fires.MuzzleFlashEffect;
 
 namespace CannonSoundPoolFix
 {
-    [BepInPlugin(PluginGuid, "Cannon Sound Pool Fix", "1.2.1")]
+    [BepInPlugin(PluginGuid, "Cannon Sound Pool Fix", "2.0.0")]
     public sealed class CannonSoundPoolFixMain : BasePlugin
     {
         internal const string PluginGuid = "furryaxw.cannon-sound-pool-fix";
