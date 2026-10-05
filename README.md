@@ -1,51 +1,51 @@
 # CannonSoundPoolFix
 
-适用于《Sprocket》的独立 BepInEx 6 插件。它会主动结束过量的旧机炮声，避免高射速武器持续占满
-全局音频 voice pool，同时限制炮口特效根实例无限增长。
+[中文](README.zh.md) | **English**
 
-## 主要功能
+A standalone BepInEx 6 plugin for Sprocket. It actively cuts off excess old cannon sounds so that high-rate-of-fire weapons can no longer keep the global audio voice pool saturated, and it caps the unbounded growth of muzzle-effect root instances.
 
-- 监听 `MuzzleFlashEffect.Setup`，不轮询车辆、场景或全局 `AudioSource`。
-- 在同一个 `1 × 1 × 1` 世界空间区域内保留最新 5 个炮声。
-- 第 6 个附近炮声出现时，直接停止最老记录的近程与远程 `AudioSource`，立即释放音频 voice。
-- 不禁用 `SFX`、`Long range SFX`、`VFX`、`Light` 或炮口特效根节点。
-- 将无限的炮口 Effect 原型池限制为 192 个实例；若游戏已有更小的正数上限，则保留游戏设置。
-- 不修改任何游戏资源文件。
+## Features
 
-## 要求
+- Hooks `MuzzleFlashEffect.Setup`; it does not poll vehicles, scenes, or the global `AudioSource`.
+- Keeps only the 5 most recent cannon sounds within the same `1 × 1 × 1` world-space region.
+- When a 6th nearby cannon sound appears, it stops the near and far `AudioSource` of the oldest entry directly, releasing the audio voice immediately.
+- Does not disable `SFX`, `Long range SFX`, `VFX`, `Light`, or the muzzle-effect root node.
+- Caps the unbounded muzzle Effect prototype pool at 192 instances; if the game already sets a smaller positive cap, the game's setting is kept.
+- Does not modify any game asset files.
 
-- 《Sprocket》`0.2.55.5`
-- BepInEx `6.0.0-be.788`，IL2CPP / net6
+## Requirements
+
+- Sprocket `0.2.55.5`
+- BepInEx `6.0.0-be.788`, IL2CPP / net6
 - Windows x64
 
-游戏更新后，生成的 IL2CPP 类型与运行时行为可能变化，需重新验证。
+Game updates may change the generated IL2CPP types and runtime behavior, so re-verification is required after an update.
 
-## 安装
+## Installation
 
-1. 为《Sprocket》安装 BepInEx 6（IL2CPP）。
-2. 将 `CannonSoundPoolFix.dll` 放入 `BepInEx\plugins`。
-3. 启动游戏；日志里应出现 `Cannon Sound Pool Fix v2.0.0` 的加载行。
+1. Install BepInEx 6 (IL2CPP) for Sprocket.
+2. Drop `CannonSoundPoolFix.dll` into `BepInEx\plugins`.
+3. Launch the game; the log should show a load line for `Cannon Sound Pool Fix v2.0.0`.
 
-持续射击触发限制时，每个场景最多记录一次：
+When sustained fire trips the limit, it logs at most once per scene:
 
 ```text
 [CSPF] Cannon voice limit engaged: stopped the oldest playing cannon AudioSource pair.
 ```
 
-## 与 SmokeSuppressor 配合
+## Working with SmokeSuppressor
 
-本模组只管理炮声音源与炮口 Effect 生命周期。[SmokeSuppressor](https://github.com/furryaxw/SmokeSuppressor)
-可以同时安装，继续负责隐藏长期堆积的烟雾输出。
+This mod only manages cannon sound sources and the muzzle Effect lifecycle. It can be installed alongside [SmokeSuppressor](https://github.com/furryaxw/SmokeSuppressor), which continues to hide the smoke output that accumulates over time.
 
-## 构建
+## Building
 
-默认假设游戏安装在 `G:\Sprocket0.2.55.5`：
+The default assumes the game is installed at `G:\Sprocket0.2.55.5`:
 
 ```powershell
 dotnet build .\CannonSoundPoolFix\CannonSoundPoolFix.csproj -c Release -p:SkipModDeploy=true
 ```
 
-如果游戏位于其他路径：
+If the game is at a different path:
 
 ```powershell
 dotnet build .\CannonSoundPoolFix\CannonSoundPoolFix.csproj -c Release `
@@ -53,9 +53,9 @@ dotnet build .\CannonSoundPoolFix\CannonSoundPoolFix.csproj -c Release `
   -p:SkipModDeploy=true
 ```
 
-省略 `SkipModDeploy` 会把构建出的 DLL 复制到 `$(SprocketGameRoot)\BepInEx\plugins`。
-游戏运行时请勿覆盖已加载的 DLL。
+Omitting `SkipModDeploy` copies the built DLL to `$(SprocketGameRoot)\BepInEx\plugins`.
+Do not overwrite a loaded DLL while the game is running.
 
-## 许可证
+## License
 
 [GPL-3.0-only](LICENSE.txt)
