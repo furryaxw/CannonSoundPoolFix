@@ -13,40 +13,56 @@
     <PackageProjectUrl>https://github.com/furryaxw/CannonSoundPoolFix</PackageProjectUrl>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <SprocketRoot Condition="'$(SprocketRoot)' == ''">G:\Sprocket</SprocketRoot>
-    <ModDeployDirectory Condition="'$(ModDeployDirectory)' == ''">$(SprocketRoot)\Mods</ModDeployDirectory>
+    <SprocketGameRoot Condition="'$(SprocketGameRoot)' == '' and '$(SPROCKET_GAME_ROOT)' != ''">$(SPROCKET_GAME_ROOT)</SprocketGameRoot>
+    <SprocketGameRoot Condition="'$(SprocketGameRoot)' == ''">G:\Sprocket0.2.55.5</SprocketGameRoot>
+    <BepInExCore>$(SprocketGameRoot)\BepInEx\core</BepInExCore>
+    <GameInterop>$(SprocketGameRoot)\BepInEx\interop</GameInterop>
+    <ModDeployDirectory Condition="'$(ModDeployDirectory)' == ''">$(SprocketGameRoot)\BepInEx\plugins</ModDeployDirectory>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>$(SprocketRoot)\MelonLoader\net6\0Harmony.dll</HintPath>
+      <HintPath>$(BepInExCore)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="BepInEx.Core">
+      <HintPath>$(BepInExCore)\BepInEx.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="BepInEx.Unity.Common">
+      <HintPath>$(BepInExCore)\BepInEx.Unity.Common.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="BepInEx.Unity.IL2CPP">
+      <HintPath>$(BepInExCore)\BepInEx.Unity.IL2CPP.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="Il2CppInterop.Runtime">
-      <HintPath>$(SprocketRoot)\MelonLoader\net6\Il2CppInterop.Runtime.dll</HintPath>
+      <HintPath>$(BepInExCore)\Il2CppInterop.Runtime.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
-      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\Il2Cppmscorlib.dll</HintPath>
-    </Reference>
-    <Reference Include="MelonLoader">
-      <HintPath>$(SprocketRoot)\MelonLoader\net6\MelonLoader.dll</HintPath>
+      <HintPath>$(GameInterop)\Il2Cppmscorlib.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(GameInterop)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.AudioModule">
-      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>$(GameInterop)\UnityEngine.AudioModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="Il2CppSprocket.Vehicles">
-      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\Il2CppSprocket.Vehicles.dll</HintPath>
-    </Reference>
-    <Reference Include="Il2CppSprocket.EffectsFramework">
-      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\Il2CppSprocket.EffectsFramework.dll</HintPath>
+    <Reference Include="Sprocket.Vehicles">
+      <HintPath>$(GameInterop)\Sprocket.Vehicles.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="Il2CppSprocket.Vehicles.Weapons">
-      <HintPath>$(SprocketRoot)\MelonLoader\Il2CppAssemblies\Il2CppSprocket.Vehicles.Weapons.dll</HintPath>
+    <Reference Include="Sprocket.EffectsFramework">
+      <HintPath>$(GameInterop)\Sprocket.EffectsFramework.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Sprocket.Vehicles.Weapons">
+      <HintPath>$(GameInterop)\Sprocket.Vehicles.Weapons.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

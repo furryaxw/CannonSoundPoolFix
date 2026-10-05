@@ -1,18 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using BepInEx;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
-using MelonLoader;
 using UnityEngine;
-using GameEffect = Il2CppSprocket.Effect;
-using MuzzleFlashEffect = Il2CppSprocket.Vehicles.Fires.MuzzleFlashEffect;
+using UnityEngine.SceneManagement;
+using GameEffect = Sprocket.Effect;
+using MuzzleFlashEffect = Sprocket.Vehicles.Fires.MuzzleFlashEffect;
 
-[assembly: MelonInfo(
-    typeof(CannonSoundPoolFix.CannonSoundPoolFixMain),
-    "Cannon Sound Pool Fix",
-    "1.2.1",
-    "furryAxw")]
-[assembly: MelonGame("HD", "Sprocket")]
 [assembly: AssemblyMetadata("Sprocket.Mod.Id", "furryaxw.cannon-sound-pool-fix")]
 [assembly: AssemblyMetadata("Sprocket.Mod.DisplayName", "Cannon Sound Pool Fix")]
 [assembly: AssemblyMetadata("Sprocket.Mod.Description", "Prevents rapid-fire cannons from exhausting Sprocket's audio pool while preserving muzzle effects.")]
@@ -23,8 +19,11 @@ using MuzzleFlashEffect = Il2CppSprocket.Vehicles.Fires.MuzzleFlashEffect;
 
 namespace CannonSoundPoolFix
 {
-    public sealed class CannonSoundPoolFixMain : MelonMod
+    [BepInPlugin(PluginGuid, "Cannon Sound Pool Fix", "1.2.1")]
+    public sealed class CannonSoundPoolFixMain : BasePlugin
     {
+        internal const string PluginGuid = "furryaxw.cannon-sound-pool-fix";
+
         private const string EffectObjectName =
             "CannonMuzzleFlashEffect(Clone)";
         private const int MaximumEffectAncestorDepth = 4;
@@ -48,10 +47,12 @@ namespace CannonSoundPoolFix
             private set;
         }
 
-        public override void OnInitializeMelon()
+        public override void Load()
         {
             Instance = this;
-            LoggerInstance.Msg(
+            AddComponent<ActiveSceneWatcher>().Configure(OnActiveSceneChanged);
+            Harmony.CreateAndPatchAll(typeof(CannonSoundPoolFixMain).Assembly, PluginGuid);
+            Log.LogInfo(
                 "[CSPF] Enabled. Keeps the latest " +
                 $"{SoundPoolRetentionPolicy.MaxPlayingEffectsPerArea} " +
                 "cannon sounds per 1 x 1 x 1 area and caps each " +
@@ -60,15 +61,16 @@ namespace CannonSoundPoolFix
                 "SFX objects and VFX remain enabled.");
         }
 
-        public override void OnDeinitializeMelon()
+        public override bool Unload()
         {
             RestorePrototypeLimits();
             ClearSoundState();
             loggedFailures.Clear();
             Instance = null;
+            return true;
         }
 
-        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+        private void OnActiveSceneChanged()
         {
             RestorePrototypeLimits();
             ClearSoundState();
@@ -147,7 +149,7 @@ namespace CannonSoundPoolFix
                     if (stoppedPlayingSource && !loggedFirstAudioStop)
                     {
                         loggedFirstAudioStop = true;
-                        LoggerInstance.Msg(
+                        Log.LogInfo(
                             "[CSPF] Cannon voice limit engaged: stopped the " +
                             "oldest playing cannon AudioSource pair.");
                     }
@@ -201,7 +203,7 @@ namespace CannonSoundPoolFix
                 if (prototype.MaxInstanceCount != configuredLimit)
                     prototype.MaxInstanceCount = configuredLimit;
 
-                LoggerInstance.Msg(
+                Log.LogInfo(
                     "[CSPF] Configured cannon muzzle-effect prototype " +
                     $"id={prototypeId},originalLimit={originalLimit}," +
                     $"effectiveLimit={configuredLimit}.");
@@ -284,7 +286,7 @@ namespace CannonSoundPoolFix
             if (!loggedFailures.Add(key))
                 return;
 
-            LoggerInstance.Error(
+            Log.LogError(
                 $"[CSPF] category={category},error={failure}");
         }
 
@@ -332,6 +334,29 @@ namespace CannonSoundPoolFix
             public GameEffect Prototype { get; }
             public int OriginalLimit { get; }
             public int EffectiveLimit { get; }
+        }
+    }
+
+    // BepInEx 没有场景回调；这个注入组件逐帧比较活动场景句柄，变化时通知宿主。
+    internal sealed class ActiveSceneWatcher : MonoBehaviour
+    {
+        private Action? onSceneChanged;
+        private int lastHandle = int.MinValue;
+
+        public ActiveSceneWatcher(IntPtr ptr) : base(ptr)
+        {
+        }
+
+        public void Configure(Action callback) => onSceneChanged = callback;
+
+        private void Update()
+        {
+            Scene active = SceneManager.GetActiveScene();
+            if (active.handle == lastHandle)
+                return;
+
+            lastHandle = active.handle;
+            onSceneChanged?.Invoke();
         }
     }
 
