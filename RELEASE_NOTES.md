@@ -28,3 +28,5 @@
 - 用户已确认持续自动炮射击期间，其他声音可以正常播放。
 - 最新炮声与炮口 VFX 保持正常。
 - `BepInEx\LogOutput.log` 已确认双 AudioSource 限制分支实际触发。
+
+<!-- sp-compat {"hamish.sprocket": "0.2.55.5", "bepinex.bepinex": "6.0.0-be.788"} -->
